@@ -10,8 +10,8 @@ RUN mkdir -p /data/db
 COPY . /app
 WORKDIR /app
 #EXPOSE 27017 Lets not expose the mongodb anymore!
+EXPOSE 5000
 RUN pip install -r requirements.txt
 RUN /usr/bin/mongod --fork --logpath /var/log/mongodb.log --dbpath /data/db 
 ENTRYPOINT ["python"]
 CMD ["app.py"]
-#ENTRYPOINT ["/usr/bin/mongod"]

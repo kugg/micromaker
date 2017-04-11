@@ -1,6 +1,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify, abort, request
 import fetchnresize
+import motor.motor_tornado
 
 app = Flask(__name__)
 
@@ -16,6 +17,8 @@ wines = [
         'image': u''
     }
 ]
+#client = motor.motor_tornado.MotorClient('localhost', 27017)
+# Insert mongodb code here
 
 @app.route('/wines', methods=['GET'])
 def get_winedex():
@@ -39,8 +42,12 @@ def add_wine():
         or not 'url' in request.json:
         abort(400)
     url = request.json.get('url')
-    image_data = fetchnresize.fetch(url)
-    b64 = fetchnresize.resize(image_data)
+    try:
+        image_data = fetchnresize.fetch(url)
+        b64 = fetchnresize.resize(image_data)
+    except Exception, err:
+        print(str(err))
+        b64="00"
     title = request.json.get('title')
     wine = {
         'id': 1234,
